@@ -11,6 +11,11 @@ export type LevelDto = {
   createdAt: string
 }
 
+export type LevelOptionDto = {
+  id: string
+  name: string
+}
+
 export type CreateLevelRequestDto = {
   name: string
   departmentId: string
@@ -18,17 +23,22 @@ export type CreateLevelRequestDto = {
 
 type LevelState = {
   levels: LevelDto[]
+  levelOptions: LevelOptionDto[]
   isFetching: boolean
+  isFetchingOptions: boolean
   isCreating: boolean
   errorMessage: string | null
   fetchLevels: () => Promise<void>
+  fetchLevelOptionsByDepartment: (departmentId: string) => Promise<void>
   createLevel: (payload: CreateLevelRequestDto) => Promise<LevelDto | null>
   clearLevelError: () => void
 }
 
 export const useLevelStore = create<LevelState>((set) => ({
   levels: [],
+  levelOptions: [],
   isFetching: false,
+  isFetchingOptions: false,
   isCreating: false,
   errorMessage: null,
 
@@ -42,6 +52,29 @@ export const useLevelStore = create<LevelState>((set) => ({
       set({
         isFetching: false,
         errorMessage: axiosError.response?.data?.message ?? 'Unable to fetch levels.',
+      })
+    }
+  },
+
+  fetchLevelOptionsByDepartment: async (departmentId) => {
+    if (!departmentId) {
+      set({ levelOptions: [] })
+      return
+    }
+
+    set({ isFetchingOptions: true, errorMessage: null })
+    try {
+      const response = await apiClient.get<LevelOptionDto[]>(`api/Level/department/${departmentId}/options`)
+      set({
+        levelOptions: response.data,
+        isFetchingOptions: false,
+      })
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message?: string }>
+      set({
+        isFetchingOptions: false,
+        levelOptions: [],
+        errorMessage: axiosError.response?.data?.message ?? 'Unable to fetch level options.',
       })
     }
   },

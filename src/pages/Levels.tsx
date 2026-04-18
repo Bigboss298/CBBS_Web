@@ -6,6 +6,7 @@ import type { LevelDto } from '../store/levelStore'
 type LevelsPageProps = {
   levels: LevelDto[]
   departments: DepartmentDto[]
+  isDepartmentsFetching: boolean
   isFetching: boolean
   isCreating: boolean
   errorMessage: string | null
@@ -26,6 +27,7 @@ function getLevelKey(levelName: string): string {
 export default function Levels({
   levels,
   departments,
+  isDepartmentsFetching,
   isFetching,
   isCreating,
   errorMessage,
@@ -83,15 +85,22 @@ export default function Levels({
             <select
               value={departmentId}
               onChange={(event) => setDepartmentId(event.target.value)}
+              disabled={isDepartmentsFetching}
               className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
               required
             >
-              <option value="">Select Department</option>
-              {departments.map((department) => (
-                <option key={department.id} value={department.id}>
-                  {department.name}
-                </option>
-              ))}
+              {isDepartmentsFetching ? (
+                <option value="">Loading departments...</option>
+              ) : (
+                <option value="">Select Department</option>
+              )}
+              {!isDepartmentsFetching
+                ? departments.map((department) => (
+                    <option key={department.id} value={department.id}>
+                      {department.name}
+                    </option>
+                  ))
+                : null}
             </select>
           </label>
 

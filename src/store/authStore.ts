@@ -21,6 +21,7 @@ export type LoginResponseDto = {
   message: string
   token: string | null
   expiresAtUtc: string | null
+  isFirstLogin: boolean
 }
 
 type AuthUser = {
@@ -28,11 +29,34 @@ type AuthUser = {
   role: string | null
 }
 
+const parseFirstLoginFromToken = (token: string | null): boolean => {
+  if (!token) {
+    return false
+  }
+
+  const payload = decodeJwtPayload(token)
+  if (!payload) {
+    return false
+  }
+
+  const firstLoginClaim = payload.IsFirstLogin ?? payload.isFirstLogin
+  if (typeof firstLoginClaim === 'boolean') {
+    return firstLoginClaim
+  }
+
+  if (typeof firstLoginClaim === 'string') {
+    return firstLoginClaim.toLowerCase() === 'true'
+  }
+
+  return false
+}
+
 type AuthState = {
   token: string | null
   expiresAtUtc: string | null
   user: AuthUser
   isAuthenticated: boolean
+  isFirstLogin: boolean
   isLoading: boolean
   errorMessage: string | null
   initializeAuth: () => void
@@ -90,6 +114,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     role: null,
   },
   isAuthenticated: false,
+  isFirstLogin: false,
   isLoading: false,
   errorMessage: null,
 
@@ -108,6 +133,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           role: null,
         },
         isAuthenticated: false,
+        isFirstLogin: false,
       })
       return
     }
@@ -117,6 +143,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       expiresAtUtc,
       user: parseAuthUserFromToken(token),
       isAuthenticated: true,
+      isFirstLogin: parseFirstLoginFromToken(token),
     })
   },
 
@@ -142,6 +169,7 @@ export const useAuthStore = create<AuthState>((set) => ({
             role: null,
           },
           isAuthenticated: false,
+          isFirstLogin: false,
           isLoading: false,
           errorMessage: loginResponse.message,
         })
@@ -157,6 +185,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         expiresAtUtc: loginResponse.expiresAtUtc,
         user: parseAuthUserFromToken(loginResponse.token),
         isAuthenticated: true,
+        isFirstLogin: loginResponse.isFirstLogin,
         isLoading: false,
         errorMessage: null,
       })
@@ -186,6 +215,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         role: null,
       },
       isAuthenticated: false,
+      isFirstLogin: false,
       isLoading: false,
       errorMessage: null,
     })

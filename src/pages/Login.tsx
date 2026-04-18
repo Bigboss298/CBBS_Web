@@ -22,7 +22,7 @@ export default function Login({ isLoading, errorMessage, onLogin }: LoginPagePro
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white via-blue-50 to-blue-100 px-4">
 			<div className="w-full max-w-md rounded-2xl border border-blue-100 bg-white p-6 shadow-lg">
-				<h1 className="text-2xl font-bold text-blue-900">Persista Login</h1>
+				<h1 className="text-2xl font-bold text-blue-900">CBBS Login</h1>
 				<p className="mt-1 text-sm text-slate-500">Sign in with your email or matric number and password.</p>
 
 				<form onSubmit={handleSubmit} className="mt-5 space-y-4">

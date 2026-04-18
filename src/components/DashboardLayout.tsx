@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import SidebarNav from './SidebarNav'
 
 type SidebarNavItem = {
@@ -7,15 +7,14 @@ type SidebarNavItem = {
   visible: boolean
 }
 
+export type DashboardNavItem = SidebarNavItem
+
 type DashboardLayoutProps = {
   heading: string
   subheading: string
   roleLabel: string
   onLogout: () => void
   navItems: SidebarNavItem[]
-  activeView: string
-  onNavigate: (key: string) => void
-  children: ReactNode
 }
 
 export default function DashboardLayout({
@@ -24,13 +23,19 @@ export default function DashboardLayout({
   roleLabel,
   onLogout,
   navItems,
-  activeView,
-  onNavigate,
-  children,
 }: DashboardLayoutProps) {
+  const location = useLocation()
+  const navigate = useNavigate()
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-blue-100 lg:flex">
-      <SidebarNav title={heading} subtitle={subheading} items={navItems} activeView={activeView} onSelect={onNavigate} />
+      <SidebarNav
+        title={heading}
+        subtitle={subheading}
+        items={navItems}
+        activeView={location.pathname}
+        onSelect={(key) => navigate(key)}
+      />
 
       <div className="flex-1">
         <header className="border-b border-blue-100 bg-white/90 backdrop-blur">
@@ -52,7 +57,9 @@ export default function DashboardLayout({
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">{children}</main>
+        <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
+          <Outlet />
+        </main>
       </div>
     </div>
   )

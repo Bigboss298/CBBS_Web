@@ -8,27 +8,27 @@ export type JwtPayload = {
 }
 
 export function getAuthToken(): string | null {
-  return localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
+  return sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
 }
 
 export function setAuthToken(token: string): void {
-  localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token)
+  sessionStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token)
 }
 
 export function clearAuthToken(): void {
-  localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
+  sessionStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
 }
 
 export function setAuthTokenExpiry(expiresAtUtc: string): void {
-  localStorage.setItem(AUTH_TOKEN_EXPIRY_STORAGE_KEY, expiresAtUtc)
+  sessionStorage.setItem(AUTH_TOKEN_EXPIRY_STORAGE_KEY, expiresAtUtc)
 }
 
 export function getAuthTokenExpiry(): string | null {
-  return localStorage.getItem(AUTH_TOKEN_EXPIRY_STORAGE_KEY)
+  return sessionStorage.getItem(AUTH_TOKEN_EXPIRY_STORAGE_KEY)
 }
 
 export function clearAuthTokenExpiry(): void {
-  localStorage.removeItem(AUTH_TOKEN_EXPIRY_STORAGE_KEY)
+  sessionStorage.removeItem(AUTH_TOKEN_EXPIRY_STORAGE_KEY)
 }
 
 export function decodeJwtPayload(token: string): JwtPayload | null {

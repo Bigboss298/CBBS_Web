@@ -6,6 +6,7 @@ import type { FacultyDto } from '../store/facultyStore'
 type DepartmentsPageProps = {
   departments: DepartmentDto[]
   faculties: FacultyDto[]
+  isFacultiesFetching: boolean
   isFetching: boolean
   isCreating: boolean
   errorMessage: string | null
@@ -16,6 +17,7 @@ type DepartmentsPageProps = {
 export default function Departments({
   departments,
   faculties,
+  isFacultiesFetching,
   isFetching,
   isCreating,
   errorMessage,
@@ -48,15 +50,18 @@ export default function Departments({
             <select
               value={facultyId}
               onChange={(event) => setFacultyId(event.target.value)}
+              disabled={isFacultiesFetching}
               className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
               required
             >
-              <option value="">Select Faculty</option>
-              {faculties.map((faculty) => (
-                <option key={faculty.id} value={faculty.id}>
-                  {faculty.name}
-                </option>
-              ))}
+              {isFacultiesFetching ? <option value="">Loading faculties...</option> : <option value="">Select Faculty</option>}
+              {!isFacultiesFetching
+                ? faculties.map((faculty) => (
+                    <option key={faculty.id} value={faculty.id}>
+                      {faculty.name}
+                    </option>
+                  ))
+                : null}
             </select>
           </label>
 

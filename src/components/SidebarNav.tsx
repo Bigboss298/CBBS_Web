@@ -17,7 +17,7 @@ export default function SidebarNav({ title, subtitle, items, activeView, onSelec
     <aside className="border-b border-blue-100 bg-white/95 lg:h-screen lg:w-72 lg:border-b-0 lg:border-r lg:sticky lg:top-0">
       <div className="flex h-full flex-col px-4 py-5 sm:px-6 lg:px-5">
         <div className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-blue-500">Persista Portal</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-blue-500">CBBS</p>
           <h1 className="mt-2 text-2xl font-bold text-blue-900">{title}</h1>
           <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
         </div>
