@@ -35,6 +35,11 @@ type UploadDocumentRequest = {
   documentType: DocumentTypeEnum
 }
 
+type DownloadDocumentRequest = {
+  documentId: string
+  fileName: string
+}
+
 type DocumentState = {
   documents: DocumentDto[]
   isFetching: boolean
@@ -42,6 +47,7 @@ type DocumentState = {
   errorMessage: string | null
   fetchDocuments: () => Promise<void>
   uploadDocument: (payload: UploadDocumentRequest) => Promise<DocumentDto | null>
+  downloadDocument: (payload: DownloadDocumentRequest) => Promise<void>
   clearDocumentError: () => void
 }
 
@@ -105,6 +111,32 @@ export const useDocumentStore = create<DocumentState>((set) => ({
       })
 
       return null
+    }
+  },
+
+  downloadDocument: async ({ documentId, fileName }) => {
+    try {
+      const response = await apiClient.get(`api/Document/${documentId}/download`, {
+        responseType: 'blob',
+      })
+
+      const blob = new Blob([response.data], {
+        type: response.headers['content-type'] ?? 'application/octet-stream',
+      })
+      const objectUrl = window.URL.createObjectURL(blob)
+      const anchor = window.document.createElement('a')
+      anchor.href = objectUrl
+      anchor.download = fileName
+      anchor.style.display = 'none'
+      window.document.body.appendChild(anchor)
+      anchor.click()
+      window.document.body.removeChild(anchor)
+      window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 1000)
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message?: string }>
+      set({
+        errorMessage: axiosError.response?.data?.message ?? 'Unable to download document.',
+      })
     }
   },
 

@@ -97,6 +97,7 @@ export default function Users({
   const [bulkFile, setBulkFile] = useState<File | null>(null)
   const [searchInput, setSearchInput] = useState(searchTerm)
   const [selectedPageSize, setSelectedPageSize] = useState(pageSize)
+  const [isCreateAccountExpanded, setIsCreateAccountExpanded] = useState(false)
   const creatableRoles = useMemo(() => getCreatableRoles(currentRole), [currentRole])
   const shouldShowFacultyField = currentRole === 'Admin'
   const isLevelAdviserCreator = currentRole === 'LevelAdviser'
@@ -256,45 +257,20 @@ export default function Users({
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-950 via-slate-900 to-blue-900 text-white shadow-2xl">
-        <div className="grid gap-6 p-6 lg:grid-cols-[1.5fr_0.9fr] lg:p-8">
-          <div className="space-y-4">
-            <div className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
-              User Management
-            </div>
-            <div>
-              <h1 className="text-3xl font-black tracking-tight sm:text-4xl">Manage users without drowning in a long list.</h1>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
-                Create staff accounts, bulk import students for LA, and browse users with server-side pagination and search.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-300">Total Matches</p>
-              <p className="mt-2 text-2xl font-bold">{totalCount.toLocaleString()}</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-300">Page</p>
-              <p className="mt-2 text-2xl font-bold">
-                {totalPages > 0 ? `${pageNumber}/${totalPages}` : '0/0'}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-300">Showing</p>
-              <p className="mt-2 text-2xl font-bold">
-                {displayStart === 0 ? '0' : `${displayStart}-${displayEnd}`}
-              </p>
-            </div>
-          </div>
+      <SectionGroup title="Create Account" subtitle="Create Dean, Faculty Officer, HOD, and other managed accounts">
+        <div className="flex items-center justify-between mb-4">
+          <button
+            type="button"
+            onClick={() => setIsCreateAccountExpanded(!isCreateAccountExpanded)}
+            className="flex items-center gap-2 rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
+          >
+            <span>{isCreateAccountExpanded ? '▼' : '▶'}</span>
+            <span>{isCreateAccountExpanded ? 'Collapse' : 'Expand'} Form</span>
+          </button>
         </div>
-      </section>
 
-      <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <SectionGroup title="Create Account" subtitle="Create Dean, Faculty Officer, HOD, and other managed accounts">
-          {canManageUsers && creatableRoles.length > 0 ? (
-            <form onSubmit={handleSubmit} autoComplete="off" className="grid gap-4 rounded-2xl bg-blue-50 p-4 md:grid-cols-2">
+        {isCreateAccountExpanded && canManageUsers && creatableRoles.length > 0 ? (
+          <form onSubmit={handleSubmit} autoComplete="off" className="grid gap-4 rounded-2xl bg-blue-50 p-4 md:grid-cols-2">
               <label className="space-y-2">
                 <span className="text-sm font-semibold text-blue-900">Staff / Matric Number</span>
                 <input
@@ -487,139 +463,135 @@ export default function Users({
                 </button>
               </div>
             </form>
-          ) : (
-            <p className="rounded-xl border border-dashed border-blue-200 bg-blue-50 p-4 text-sm text-blue-700">
-              You do not have permission to create staff accounts.
+        ) : isCreateAccountExpanded ? (
+          <p className="rounded-xl border border-dashed border-blue-200 bg-blue-50 p-4 text-sm text-blue-700">
+            You do not have permission to create staff accounts.
+          </p>
+        ) : null}
+      </SectionGroup>
+
+      {currentRole === 'LevelAdviser' ? (
+        <div className="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm">
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-semibold text-blue-900">Bulk Student Upload</h3>
+              <p className="text-xs text-slate-500">Upload one CSV file and create many student accounts at once</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleBulkSubmit} className="space-y-4 rounded-2xl bg-blue-50 p-4">
+            <p className="text-xs text-blue-700">
+              CSV required columns: <strong>matricNumber</strong>, <strong>email</strong>, <strong>fullName</strong>.
+              Optional columns: <strong>isActive</strong>, <strong>facultyId</strong>, <strong>departmentId</strong>, <strong>levelId</strong>.
+              For Level Adviser uploads, faculty/department/level are always taken from your LA account.
             </p>
-          )}
-        </SectionGroup>
 
-        <div className="space-y-6">
-          <SectionGroup title="Search & Paging" subtitle="Find users quickly without loading everything at once">
-            <form onSubmit={handleSearchSubmit} className="space-y-4 rounded-2xl bg-blue-50 p-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="space-y-2 sm:col-span-2">
-                  <span className="text-sm font-semibold text-blue-900">Search users</span>
-                  <input
-                    value={searchInput}
-                    onChange={(event) => setSearchInput(event.target.value)}
-                    className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
-                    placeholder="Search by name, matric number, or email"
-                  />
-                </label>
+            <button
+              type="button"
+              onClick={handleDownloadTemplate}
+              className="rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+            >
+              Download CSV Template
+            </button>
 
-                <label className="space-y-2">
-                  <span className="text-sm font-semibold text-blue-900">Page size</span>
-                  <select
-                    value={selectedPageSize}
-                    onChange={(event) => void handlePageSizeChange(event.target.value)}
-                    className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
-                  >
-                    {[8, 12, 20, 25].map((option) => (
-                      <option key={option} value={option}>
-                        {option} per page
-                      </option>
-                    ))}
-                  </select>
-                </label>
+            <label className="block space-y-2">
+              <span className="text-sm font-semibold text-blue-900">Student CSV File</span>
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={(event) => setBulkFile(event.target.files?.[0] ?? null)}
+                className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-blue-100 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-blue-700"
+                required
+              />
+            </label>
 
-                <div className="flex items-end gap-3 sm:justify-end">
-                  <button
-                    type="submit"
-                    disabled={isFetching}
-                    className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
-                  >
-                    {isFetching ? 'Searching...' : 'Apply'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleSearchReset()}
-                    className="rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
-                  >
-                    Clear
-                  </button>
-                </div>
+            <button
+              type="submit"
+              disabled={isBulkImporting || !bulkFile}
+              className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            >
+              {isBulkImporting ? 'Importing...' : 'Upload and Import Students'}
+            </button>
+          </form>
+
+          {bulkImportResult ? (
+            <div className="mt-4 space-y-3">
+              <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900">
+                <p className="font-semibold">{bulkImportResult.message || 'Import result'}</p>
+                <p className="mt-2 text-xs text-slate-600">
+                  Processed: {bulkImportResult.totalRows} | Successful: {bulkImportResult.successCount} | Failed: {bulkImportResult.failureCount}
+                </p>
               </div>
-            </form>
 
-            {currentRole === 'LevelAdviser' ? (
-              <div className="mt-4 rounded-2xl border border-blue-100 bg-white p-4 shadow-sm">
-                <div className="mb-3 flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="text-sm font-semibold text-blue-900">Bulk Student Upload</h3>
-                    <p className="text-xs text-slate-500">Upload one CSV file and create many student accounts at once</p>
-                  </div>
-                </div>
-
-                <form onSubmit={handleBulkSubmit} className="space-y-4 rounded-2xl bg-blue-50 p-4">
-                  <p className="text-xs text-blue-700">
-                    CSV required columns: <strong>matricNumber</strong>, <strong>email</strong>, <strong>fullName</strong>.
-                    Optional columns: <strong>isActive</strong>, <strong>facultyId</strong>, <strong>departmentId</strong>, <strong>levelId</strong>.
-                    For Level Adviser uploads, faculty/department/level are always taken from your LA account.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={handleDownloadTemplate}
-                    className="rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
-                  >
-                    Download CSV Template
-                  </button>
-
-                  <label className="block space-y-2">
-                    <span className="text-sm font-semibold text-blue-900">Student CSV File</span>
-                    <input
-                      type="file"
-                      accept=".csv,text/csv"
-                      onChange={(event) => setBulkFile(event.target.files?.[0] ?? null)}
-                      className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-blue-100 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-blue-700"
-                      required
-                    />
-                  </label>
-
-                  <button
-                    type="submit"
-                    disabled={isBulkImporting || !bulkFile}
-                    className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
-                  >
-                    {isBulkImporting ? 'Importing...' : 'Upload and Import Students'}
-                  </button>
-                </form>
-
-                {bulkImportResult ? (
-                  <div className="mt-4 space-y-3">
-                    <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900">
-                      <p className="font-semibold">{bulkImportResult.message || 'Import result'}</p>
-                      <p className="mt-2 text-xs text-slate-600">
-                        Processed: {bulkImportResult.totalRows} | Successful: {bulkImportResult.successCount} | Failed: {bulkImportResult.failureCount}
+              {bulkImportResult.rows.length > 0 ? (
+                <div className="space-y-2">
+                  {bulkImportResult.rows.map((row) => (
+                    <div
+                      key={`${row.rowNumber}-${row.matricNumber}-${row.email}`}
+                      className={`rounded-xl border p-3 text-xs ${row.isSuccess ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : 'border-red-100 bg-red-50 text-red-700'}`}
+                    >
+                      <p className="font-semibold">Row {row.rowNumber}</p>
+                      <p>
+                        {row.fullName || 'N/A'} • {row.matricNumber || 'N/A'} • {row.email || 'N/A'}
                       </p>
+                      <p>{row.message}</p>
                     </div>
-
-                    {bulkImportResult.rows.length > 0 ? (
-                      <div className="space-y-2">
-                        {bulkImportResult.rows.map((row) => (
-                          <div
-                            key={`${row.rowNumber}-${row.matricNumber}-${row.email}`}
-                            className={`rounded-xl border p-3 text-xs ${row.isSuccess ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : 'border-red-100 bg-red-50 text-red-700'}`}
-                          >
-                            <p className="font-semibold">Row {row.rowNumber}</p>
-                            <p>
-                              {row.fullName || 'N/A'} • {row.matricNumber || 'N/A'} • {row.email || 'N/A'}
-                            </p>
-                            <p>{row.message}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-          </SectionGroup>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
-      </div>
+      ) : null}
 
       <SectionGroup title="Users" subtitle="Server-side paginated list of managed accounts">
+        <form onSubmit={handleSearchSubmit} className="mb-4 space-y-4 rounded-2xl bg-blue-50 p-4">
+          <h3 className="text-sm font-semibold text-blue-900">Search & Filter</h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="space-y-2 sm:col-span-2">
+              <span className="text-sm font-semibold text-blue-900">Search users</span>
+              <input
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
+                placeholder="Search by name, matric number, or email"
+              />
+            </label>
+
+            <label className="space-y-2">
+              <span className="text-sm font-semibold text-blue-900">Page size</span>
+              <select
+                value={selectedPageSize}
+                onChange={(event) => void handlePageSizeChange(event.target.value)}
+                className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
+              >
+                {[8, 12, 20, 25].map((option) => (
+                  <option key={option} value={option}>
+                    {option} per page
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <div className="flex items-end gap-3 sm:justify-end">
+              <button
+                type="submit"
+                disabled={isFetching}
+                className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+              >
+                {isFetching ? 'Searching...' : 'Apply'}
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleSearchReset()}
+                className="rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </form>
+
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-50 p-4">
           <div>
             <p className="text-sm font-semibold text-slate-900">

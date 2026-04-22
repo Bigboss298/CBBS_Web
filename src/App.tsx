@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard'
 import Departments from './pages/Departments'
 import Faculties from './pages/Faculties'
 import Levels from './pages/Levels'
-import Login from './pages/Login'
+import Login from './pages/Login.tsx'
 import Users from './pages/Users'
 import Upload from './pages/Upload'
 import ChangePassword from './pages/ChangePassword'
@@ -48,9 +48,10 @@ function DashboardRoute() {
         type="button"
         onClick={() => void fetchDocuments()}
         disabled={isFetching}
-        className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+        title="Refresh documents"
+        className="inline-flex items-center justify-center p-0 text-3xl font-black leading-none text-blue-900 transition hover:text-blue-700 disabled:cursor-not-allowed disabled:text-blue-300"
       >
-        {isFetching ? 'Refreshing...' : 'Refresh Accessible Documents'}
+        <span className={isFetching ? 'animate-spin' : ''}>⟳</span>
       </button>
       {errorMessage ? <p className="rounded-xl border border-red-100 bg-red-50 p-3 text-sm text-red-600">{errorMessage}</p> : null}
       <Dashboard role={role} documents={documents} />
