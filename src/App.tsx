@@ -10,7 +10,9 @@ import Login from './pages/Login.tsx'
 import Users from './pages/Users'
 import Upload from './pages/Upload'
 import ChangePassword from './pages/ChangePassword'
+import ActivityLog from './pages/ActivityLog'
 import { useAuthStore } from './store/authStore'
+import { useAuditLogStore } from './store/auditLogStore'
 import { useDepartmentStore } from './store/departmentStore'
 import { useDocumentStore } from './store/documentStore'
 import { useFacultyStore } from './store/facultyStore'
@@ -212,6 +214,45 @@ function ChangePasswordRoute() {
   )
 }
 
+function ActivityLogRoute() {
+  const role = useAuthStore((state) => state.user.role)
+  const myLogs = useAuditLogStore((state) => state.myLogs)
+  const allLogs = useAuditLogStore((state) => state.allLogs)
+  const myLogsHasMore = useAuditLogStore((state) => state.myLogsHasMore)
+  const allLogsHasMore = useAuditLogStore((state) => state.allLogsHasMore)
+  const isMyLogsFetching = useAuditLogStore((state) => state.isMyLogsFetching)
+  const isAllLogsFetching = useAuditLogStore((state) => state.isAllLogsFetching)
+  const errorMessage = useAuditLogStore((state) => state.errorMessage)
+  const fetchMyLogsFirstPage = useAuditLogStore((state) => state.fetchMyLogsFirstPage)
+  const fetchMyLogsNextPage = useAuditLogStore((state) => state.fetchMyLogsNextPage)
+  const fetchAllLogsFirstPage = useAuditLogStore((state) => state.fetchAllLogsFirstPage)
+  const fetchAllLogsNextPage = useAuditLogStore((state) => state.fetchAllLogsNextPage)
+
+  useEffect(() => {
+    void fetchMyLogsFirstPage()
+    if (role === 'Admin') {
+      void fetchAllLogsFirstPage()
+    }
+  }, [fetchAllLogsFirstPage, fetchMyLogsFirstPage, role])
+
+  return (
+    <ActivityLog
+      currentRole={role}
+      myLogs={myLogs}
+      allLogs={allLogs}
+      myLogsHasMore={myLogsHasMore}
+      allLogsHasMore={allLogsHasMore}
+      isMyLogsFetching={isMyLogsFetching}
+      isAllLogsFetching={isAllLogsFetching}
+      errorMessage={errorMessage}
+      onLoadMyLogsFirstPage={fetchMyLogsFirstPage}
+      onLoadMyLogsNextPage={fetchMyLogsNextPage}
+      onLoadAllLogsFirstPage={fetchAllLogsFirstPage}
+      onLoadAllLogsNextPage={fetchAllLogsNextPage}
+    />
+  )
+}
+
 function App() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const isAuthLoading = useAuthStore((state) => state.isLoading)
@@ -257,6 +298,7 @@ function App() {
   const canManageFaculties = user.role === 'Admin'
   const navItems = [
     { key: '/dashboard', label: 'Dashboard', visible: true },
+    { key: '/activity-log', label: 'Activity Log', visible: true },
     { key: '/upload', label: 'Upload', visible: canUploadDocuments },
     { key: '/users', label: 'Users', visible: canManageUsers },
     { key: '/faculties', label: 'Faculties', visible: canManageFaculties },
@@ -297,7 +339,7 @@ function App() {
             element={
               <DashboardLayout
                 heading={getDashboardHeading(user.role)}
-                subheading="Secure role-based records, provisioning, and document workflow"
+                subheading="Secure role-based records, accountability, and document workflow"
                 roleLabel={getRoleLabel(user.role)}
                 onLogout={logout}
                 navItems={navItems}
@@ -305,6 +347,7 @@ function App() {
             }
           >
             <Route path="/dashboard" element={isFirstLogin ? <Navigate to="/change-password" replace /> : <DashboardRoute />} />
+            <Route path="/activity-log" element={isFirstLogin ? <Navigate to="/change-password" replace /> : <ActivityLogRoute />} />
 
             <Route element={<RoleGuard allowedRoles={['Student']} />}>
               <Route path="/upload" element={isFirstLogin ? <Navigate to="/change-password" replace /> : <UploadRoute />} />

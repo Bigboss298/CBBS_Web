@@ -270,10 +270,6 @@ export default function Dashboard({ role, documents }: DashboardPageProps) {
 		setSearchParams(normalized.length > 0 ? { path: pathToParam(normalized) } : {})
 	}
 
-	const goBack = () => {
-		navigatePath(safePath.slice(0, -1))
-	}
-
 	const totalDocuments = documents.length
 	const folderCount = nextFolderLabels.length
 	const visibleItemCount = currentDocuments.length
