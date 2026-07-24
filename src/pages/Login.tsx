@@ -3,7 +3,7 @@ import { useId, useState } from 'react'
 type LoginPageProps = {
 	isLoading: boolean
 	errorMessage: string | null
-	onLogin: (payload: { identifier: string; password: string }) => Promise<boolean>
+	onLogin: (payload: { email: string; password: string }) => Promise<boolean>
 }
 
 type FieldShellProps = {
@@ -94,17 +94,17 @@ function FieldShell({ id, label, value, type = 'text', placeholder, autoComplete
 }
 
 export default function Login({ isLoading, errorMessage, onLogin }: LoginPageProps) {
-	const identifierId = useId()
+	const emailId = useId()
 	const passwordId = useId()
-	const [identifier, setIdentifier] = useState('')
+	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [rememberMe, setRememberMe] = useState(true)
 	const [showPassword, setShowPassword] = useState(false)
-	const [identifierTouched, setIdentifierTouched] = useState(false)
+	const [emailTouched, setEmailTouched] = useState(false)
 	const [passwordTouched, setPasswordTouched] = useState(false)
 	const [submitted, setSubmitted] = useState(false)
 
-	const identifierError = (submitted || identifierTouched) && identifier.trim().length === 0 ? 'Enter your email address or matric number.' : null
+	const emailError = (submitted || emailTouched) && email.trim().length === 0 ? 'Enter your email address or matric number.' : null
 	const passwordError = (submitted || passwordTouched) && password.trim().length === 0 ? 'Enter your password to continue.' : null
 	const canToggleVisibility = password.length > 0
 
@@ -112,12 +112,12 @@ export default function Login({ isLoading, errorMessage, onLogin }: LoginPagePro
 		event.preventDefault()
 		setSubmitted(true)
 
-		if (identifier.trim().length === 0 || password.trim().length === 0) {
+		if (email.trim().length === 0 || password.trim().length === 0) {
 			return
 		}
 
 		await onLogin({
-			identifier,
+			email,
 			password,
 		})
 	}
@@ -203,15 +203,15 @@ export default function Login({ isLoading, errorMessage, onLogin }: LoginPagePro
 
 						<form onSubmit={handleSubmit} className="space-y-5" noValidate>
 							<FieldShell
-								id={identifierId}
+								id={emailId}
 								label="Email or Matric Number"
-								value={identifier}
-								placeholder="Use the identifier issued to you"
+								value={email}
+								placeholder="Enter your email or matric number"
 								autoComplete="username"
 								icon={<UserIcon />}
-								error={identifierError}
-								onChange={setIdentifier}
-								onBlur={() => setIdentifierTouched(true)}
+								error={emailError}
+								onChange={setEmail}
+								onBlur={() => setEmailTouched(true)}
 							/>
 
 							<div className="space-y-1.5">

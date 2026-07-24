@@ -12,7 +12,7 @@ import {
 } from '../lib/authToken'
 
 export type LoginRequestDto = {
-  identifier: string
+  email: string
   password: string
 }
 
@@ -27,6 +27,8 @@ export type LoginResponseDto = {
 type AuthUser = {
   userId: string | null
   role: string | null
+  isGraduated: boolean
+  departmentId: string | null
 }
 
 const parseFirstLoginFromToken = (token: string | null): boolean => {
@@ -56,6 +58,7 @@ type AuthState = {
   expiresAtUtc: string | null
   user: AuthUser
   isAuthenticated: boolean
+  isInitializing: boolean
   isFirstLogin: boolean
   isLoading: boolean
   errorMessage: string | null
@@ -66,18 +69,12 @@ type AuthState = {
 
 const parseAuthUserFromToken = (token: string | null): AuthUser => {
   if (!token) {
-    return {
-      userId: null,
-      role: null,
-    }
+    return { userId: null, role: null, isGraduated: false, departmentId: null }
   }
 
   const payload = decodeJwtPayload(token)
   if (!payload) {
-    return {
-      userId: null,
-      role: null,
-    }
+    return { userId: null, role: null, isGraduated: false, departmentId: null }
   }
 
   const roleFromClaim =
@@ -87,9 +84,19 @@ const parseAuthUserFromToken = (token: string | null): AuthUser => {
         ? (payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] as string)
         : null
 
+  const deptRaw = payload.DepartmentId ?? payload.departmentId
+  const departmentId = typeof deptRaw === 'string' && deptRaw.length > 0 ? deptRaw : null
+
   return {
     userId: typeof payload.UserId === 'string' ? payload.UserId : null,
     role: roleFromClaim,
+    departmentId,
+    isGraduated: (() => {
+      const v = payload.IsGraduated ?? payload.isGraduated
+      if (typeof v === 'boolean') return v
+      if (typeof v === 'string') return v.toLowerCase() === 'true'
+      return false
+    })(),
   }
 }
 
@@ -112,8 +119,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: {
     userId: null,
     role: null,
+    isGraduated: false,
+    departmentId: null,
   },
   isAuthenticated: false,
+  isInitializing: true,
   isFirstLogin: false,
   isLoading: false,
   errorMessage: null,
@@ -131,8 +141,11 @@ export const useAuthStore = create<AuthState>((set) => ({
         user: {
           userId: null,
           role: null,
+          isGraduated: false,
+          departmentId: null,
         },
         isAuthenticated: false,
+        isInitializing: false,
         isFirstLogin: false,
       })
       return
@@ -143,6 +156,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       expiresAtUtc,
       user: parseAuthUserFromToken(token),
       isAuthenticated: true,
+      isInitializing: false,
       isFirstLogin: parseFirstLoginFromToken(token),
     })
   },
@@ -167,6 +181,8 @@ export const useAuthStore = create<AuthState>((set) => ({
           user: {
             userId: null,
             role: null,
+            isGraduated: false,
+            departmentId: null,
           },
           isAuthenticated: false,
           isFirstLogin: false,
@@ -213,6 +229,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       user: {
         userId: null,
         role: null,
+        isGraduated: false,
+        departmentId: null,
       },
       isAuthenticated: false,
       isFirstLogin: false,

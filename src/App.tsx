@@ -11,6 +11,7 @@ import Users from './pages/Users'
 import Upload from './pages/Upload'
 import ChangePassword from './pages/ChangePassword'
 import ActivityLog from './pages/ActivityLog'
+import Promotion from './pages/Promotion'
 import { useAuthStore } from './store/authStore'
 import { useAuditLogStore } from './store/auditLogStore'
 import { useDepartmentStore } from './store/departmentStore'
@@ -18,6 +19,7 @@ import { useDocumentStore } from './store/documentStore'
 import { useFacultyStore } from './store/facultyStore'
 import { useLevelStore } from './store/levelStore'
 import { useUserStore } from './store/userStore'
+import { usePromotionStore } from './store/promotionStore'
 import ProtectedRoute from './routes/ProtectedRoute.tsx'
 import RoleGuard from './routes/RoleGuard.tsx'
 
@@ -62,6 +64,7 @@ function DashboardRoute() {
 }
 
 function UploadRoute() {
+  const isGraduated = useAuthStore((state) => state.user.isGraduated)
   const documents = useDocumentStore((state) => state.documents)
   const isFetching = useDocumentStore((state) => state.isFetching)
   const isUploading = useDocumentStore((state) => state.isUploading)
@@ -71,6 +74,7 @@ function UploadRoute() {
 
   return (
     <Upload
+      isGraduated={isGraduated}
       documents={documents}
       isFetching={isFetching}
       isUploading={isUploading}
@@ -203,6 +207,32 @@ function LevelsRoute() {
   )
 }
 
+function PromotionRoute() {
+  const role = useAuthStore((state) => state.user.role)
+  const currentDepartmentId = useAuthStore((state) => state.user.departmentId)
+  const departments = useDepartmentStore((state) => state.departments)
+  const isDepartmentsFetching = useDepartmentStore((state) => state.isFetching)
+  const isPromoting = usePromotionStore((state) => state.isPromoting)
+  const lastResult = usePromotionStore((state) => state.lastResult)
+  const errorMessage = usePromotionStore((state) => state.errorMessage)
+  const promoteStudents = usePromotionStore((state) => state.promoteStudents)
+  const clearPromotionState = usePromotionStore((state) => state.clearPromotionState)
+
+  return (
+    <Promotion
+      currentRole={role}
+      currentDepartmentId={currentDepartmentId}
+      departments={departments}
+      isFetching={isDepartmentsFetching}
+      isPromoting={isPromoting}
+      lastResult={lastResult}
+      errorMessage={errorMessage}
+      onPromote={promoteStudents}
+      onClear={clearPromotionState}
+    />
+  )
+}
+
 function ChangePasswordRoute() {
   return (
     <ChangePassword
@@ -256,6 +286,7 @@ function ActivityLogRoute() {
 function App() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const isAuthLoading = useAuthStore((state) => state.isLoading)
+  const isInitializing = useAuthStore((state) => state.isInitializing)
   const authErrorMessage = useAuthStore((state) => state.errorMessage)
   const user = useAuthStore((state) => state.user)
   const isFirstLogin = useAuthStore((state) => state.isFirstLogin)
@@ -273,6 +304,7 @@ function App() {
   }, [initializeAuth])
 
   useEffect(() => {
+    // All authenticated users get their accessible documents loaded automatically
     if (isAuthenticated && !isFirstLogin) {
       void fetchDocuments()
     }
@@ -293,14 +325,16 @@ function App() {
     }
   }, [isAuthenticated, isFirstLogin, fetchUsers, fetchFaculties, fetchDepartments, user.role])
 
-  const canUploadDocuments = user.role === 'Student'
+  const canViewDocuments = user.role === 'Student' // graduated students included
   const canManageUsers = user.role === 'Admin' || user.role === 'Dean' || user.role === 'FacultyOfficer' || user.role === 'HOD' || user.role === 'LevelAdviser'
   const canManageFaculties = user.role === 'Admin'
+  const canPromote = user.role === 'Admin' || user.role === 'Dean' || user.role === 'FacultyOfficer' || user.role === 'HOD'
   const navItems = [
     { key: '/dashboard', label: 'Dashboard', visible: true },
     { key: '/activity-log', label: 'Activity Log', visible: true },
-    { key: '/upload', label: 'Upload', visible: canUploadDocuments },
+    { key: '/upload', label: user.isGraduated ? 'My Documents' : 'Upload', visible: canViewDocuments },
     { key: '/users', label: 'Users', visible: canManageUsers },
+    { key: '/promote', label: 'Session Promotion', visible: canPromote },
     { key: '/faculties', label: 'Faculties', visible: canManageFaculties },
     { key: '/departments', label: 'Departments', visible: canManageFaculties },
     { key: '/levels', label: 'Levels', visible: canManageFaculties },
@@ -315,6 +349,7 @@ function App() {
         <Route
           path="/login"
           element={
+            isInitializing ? null :
             isAuthenticated ? (
               <Navigate to={defaultRoute} replace />
             ) : (
@@ -355,6 +390,10 @@ function App() {
 
             <Route element={<RoleGuard allowedRoles={['Admin', 'Dean', 'FacultyOfficer', 'HOD', 'LevelAdviser']} />}>
               <Route path="/users" element={isFirstLogin ? <Navigate to="/change-password" replace /> : <UsersRoute />} />
+            </Route>
+
+            <Route element={<RoleGuard allowedRoles={['Admin', 'Dean', 'FacultyOfficer', 'HOD']} />}>
+              <Route path="/promote" element={isFirstLogin ? <Navigate to="/change-password" replace /> : <PromotionRoute />} />
             </Route>
 
             <Route element={<RoleGuard allowedRoles={['Admin']} />}>

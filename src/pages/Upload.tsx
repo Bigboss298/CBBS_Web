@@ -4,6 +4,7 @@ import SectionGroup from '../components/SectionGroup'
 import type { DocumentDto, DocumentTypeEnum } from '../store/documentStore'
 
 type UploadPageProps = {
+	isGraduated: boolean
 	documents: DocumentDto[]
 	isFetching: boolean
 	isUploading: boolean
@@ -13,6 +14,7 @@ type UploadPageProps = {
 }
 
 export default function Upload({
+	isGraduated,
 	documents,
 	isFetching,
 	isUploading,
@@ -22,7 +24,15 @@ export default function Upload({
 }: UploadPageProps) {
 	return (
 		<div className="space-y-4">
-			<FileUpload isUploading={isUploading} onUpload={onUpload} />
+			{isGraduated ? (
+				<SectionGroup title="Graduated" subtitle="Your academic journey is complete">
+					<p className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+						🎓 You have graduated. You can still view and download your documents below, but uploading new documents is no longer available.
+					</p>
+				</SectionGroup>
+			) : (
+				<FileUpload isUploading={isUploading} onUpload={onUpload} />
+			)}
 
 			{errorMessage ? (
 				<SectionGroup title="Upload Status">
@@ -39,7 +49,7 @@ export default function Upload({
 				>
 					{isFetching ? 'Refreshing...' : 'Refresh Documents'}
 				</button>
-				<DocumentList documents={documents} isLoading={isFetching} emptyMessage="Upload a document to get started." />
+				<DocumentList documents={documents} isLoading={isFetching} emptyMessage="No documents found." />
 			</SectionGroup>
 		</div>
 	)
