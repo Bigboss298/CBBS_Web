@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { clearAuthToken, clearAuthTokenExpiry, getAuthToken } from './authToken'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'Cbbs-env.eba-p4zbykdz.eu-west-1.elasticbeanstalk.com/'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://Cbbs-env.eba-p4zbykdz.eu-west-1.elasticbeanstalk.com/'
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
