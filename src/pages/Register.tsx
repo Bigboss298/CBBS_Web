@@ -331,8 +331,8 @@ export default function Register() {
 									autoComplete="name" icon={<UserIcon />} error={fullNameError}
 									onChange={setFullName} onBlur={() => mark('fullName')} />
 
-								<FieldShell id={matricId} label="Matric Number" value={matric}
-									placeholder="Enter your matric number" autoComplete="off" icon={<IdCardIcon />} error={matricError}
+								<FieldShell id={matricId} label="Mat/Staff Number" value={matric}
+									placeholder="Enter your matric/staff number" autoComplete="off" icon={<IdCardIcon />} error={matricError}
 									onChange={setMatric} onBlur={() => mark('matric')} />
 							</div>
 
