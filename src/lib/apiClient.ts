@@ -2,6 +2,7 @@ import axios from 'axios'
 import { clearAuthToken, clearAuthTokenExpiry, getAuthToken } from './authToken'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://cbbs.idealsmartsolutions.com/'
+// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://localhost:7284/'
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

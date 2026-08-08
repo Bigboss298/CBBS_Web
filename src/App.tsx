@@ -1,12 +1,14 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
-import DashboardLayout from './components/DashboardLayout'
+import DashboardLayout, { type DashboardNavItem } from './components/DashboardLayout'
 import Dashboard from './pages/Dashboard'
 import Departments from './pages/Departments'
 import Faculties from './pages/Faculties'
 import Levels from './pages/Levels'
 import Login from './pages/Login.tsx'
+import Register from './pages/Register.tsx'
+import PendingRegistrations from './pages/PendingRegistrations.tsx'
 import Users from './pages/Users'
 import Upload from './pages/Upload'
 import ChangePassword from './pages/ChangePassword'
@@ -329,15 +331,16 @@ function App() {
   const canManageUsers = user.role === 'Admin' || user.role === 'Dean' || user.role === 'FacultyOfficer' || user.role === 'HOD' || user.role === 'LevelAdviser'
   const canManageFaculties = user.role === 'Admin'
   const canPromote = user.role === 'Admin' || user.role === 'Dean' || user.role === 'FacultyOfficer' || user.role === 'HOD'
-  const navItems = [
-    { key: '/dashboard', label: 'Dashboard', visible: true },
-    { key: '/activity-log', label: 'Activity Log', visible: true },
-    { key: '/upload', label: user.isGraduated ? 'My Documents' : 'Upload', visible: canViewDocuments },
-    { key: '/users', label: 'Users', visible: canManageUsers },
-    { key: '/promote', label: 'Session Promotion', visible: canPromote },
-    { key: '/faculties', label: 'Faculties', visible: canManageFaculties },
-    { key: '/departments', label: 'Departments', visible: canManageFaculties },
-    { key: '/levels', label: 'Levels', visible: canManageFaculties },
+  const navItems: DashboardNavItem[] = [
+    { key: '/dashboard', label: 'Dashboard', visible: true, icon: 'dashboard' },
+    { key: '/activity-log', label: 'Activity Log', visible: true, icon: 'activity' },
+    { key: '/upload', label: user.isGraduated ? 'My Documents' : 'Upload', visible: canViewDocuments, icon: 'upload' },
+    { key: '/users', label: 'Users', visible: canManageUsers, icon: 'users' },
+    { key: '/registrations', label: 'Registrations', visible: user.role === 'Admin', icon: 'registrations' },
+    { key: '/promote', label: 'Session Promotion', visible: canPromote, icon: 'promotion' },
+    { key: '/faculties', label: 'Faculties', visible: canManageFaculties, icon: 'faculties' },
+    { key: '/departments', label: 'Departments', visible: canManageFaculties, icon: 'departments' },
+    { key: '/levels', label: 'Levels', visible: canManageFaculties, icon: 'levels' },
   ]
 
   const defaultRoute = isAuthenticated ? (isFirstLogin ? '/change-password' : '/dashboard') : '/login'
@@ -354,6 +357,18 @@ function App() {
               <Navigate to={defaultRoute} replace />
             ) : (
               <Login isLoading={isAuthLoading} errorMessage={authErrorMessage} onLogin={login} />
+            )
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            isInitializing ? null :
+            isAuthenticated ? (
+              <Navigate to={defaultRoute} replace />
+            ) : (
+              <Register />
             )
           }
         />
@@ -400,6 +415,7 @@ function App() {
               <Route path="/faculties" element={isFirstLogin ? <Navigate to="/change-password" replace /> : <FacultiesRoute />} />
               <Route path="/departments" element={isFirstLogin ? <Navigate to="/change-password" replace /> : <DepartmentsRoute />} />
               <Route path="/levels" element={isFirstLogin ? <Navigate to="/change-password" replace /> : <LevelsRoute />} />
+              <Route path="/registrations" element={isFirstLogin ? <Navigate to="/change-password" replace /> : <PendingRegistrations />} />
             </Route>
           </Route>
         </Route>

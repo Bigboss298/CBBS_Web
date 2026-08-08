@@ -45,7 +45,7 @@ export default function Upload({
 					type="button"
 					onClick={onRefresh}
 					disabled={isFetching}
-					className="mb-4 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+								className="mb-4 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300 sm:w-auto"
 				>
 					{isFetching ? 'Refreshing...' : 'Refresh Documents'}
 				</button>

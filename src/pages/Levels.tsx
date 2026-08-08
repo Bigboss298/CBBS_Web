@@ -86,7 +86,7 @@ export default function Levels({
               value={departmentId}
               onChange={(event) => setDepartmentId(event.target.value)}
               disabled={isDepartmentsFetching}
-              className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
+              className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-base outline-none focus:border-blue-500 sm:text-sm"
               required
             >
               {isDepartmentsFetching ? (
@@ -109,17 +109,17 @@ export default function Levels({
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
-              className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
+              className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-base outline-none focus:border-blue-500 sm:text-sm"
               placeholder="e.g. 100 Level"
               required
             />
           </label>
 
-          <div className="md:col-span-2 flex items-center gap-3">
+            <div className="md:col-span-2 flex flex-col gap-3 sm:flex-row sm:items-center">
             <button
               type="submit"
               disabled={isCreating || !departmentId}
-              className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
             >
               {isCreating ? 'Creating...' : 'Create Level'}
             </button>
@@ -133,7 +133,7 @@ export default function Levels({
           type="button"
           onClick={onRefresh}
           disabled={isFetching}
-          className="mb-4 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+          className="mb-4 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300 sm:w-auto"
         >
           {isFetching ? 'Refreshing...' : 'Refresh Levels'}
         </button>

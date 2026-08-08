@@ -270,7 +270,7 @@ export default function Users({
         </div>
 
         {isCreateAccountExpanded && canManageUsers && creatableRoles.length > 0 ? (
-          <form onSubmit={handleSubmit} autoComplete="off" className="grid gap-4 rounded-2xl bg-blue-50 p-4 md:grid-cols-2">
+          <form onSubmit={handleSubmit} autoComplete="off" className="grid gap-3 rounded-2xl bg-blue-50 p-3 sm:gap-4 sm:p-4 md:grid-cols-2">
               <label className="space-y-2">
                 <span className="text-sm font-semibold text-blue-900">Staff / Matric Number</span>
                 <input
@@ -471,7 +471,7 @@ export default function Users({
       </SectionGroup>
 
       {currentRole === 'LevelAdviser' ? (
-        <div className="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border border-blue-100 bg-white p-3 shadow-sm sm:p-4">
           <div className="mb-3 flex items-start justify-between gap-3">
             <div>
               <h3 className="text-sm font-semibold text-blue-900">Bulk Student Upload</h3>
@@ -479,7 +479,7 @@ export default function Users({
             </div>
           </div>
 
-          <form onSubmit={handleBulkSubmit} className="space-y-4 rounded-2xl bg-blue-50 p-4">
+          <form onSubmit={handleBulkSubmit} className="space-y-3 rounded-2xl bg-blue-50 p-3 sm:space-y-4 sm:p-4">
             <p className="text-xs text-blue-700">
               CSV required columns: <strong>matricNumber</strong>, <strong>email</strong>, <strong>fullName</strong>.
               Optional columns: <strong>isActive</strong>, <strong>facultyId</strong>, <strong>departmentId</strong>, <strong>levelId</strong>.
@@ -545,9 +545,9 @@ export default function Users({
       ) : null}
 
       <SectionGroup title="Users" subtitle="Server-side paginated list of managed accounts">
-        <form onSubmit={handleSearchSubmit} className="mb-4 space-y-4 rounded-2xl bg-blue-50 p-4">
+        <form onSubmit={handleSearchSubmit} className="mb-3 space-y-3 rounded-2xl bg-blue-50 p-3 sm:mb-4 sm:space-y-4 sm:p-4">
           <h3 className="text-sm font-semibold text-blue-900">Search & Filter</h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
             <label className="space-y-2 sm:col-span-2">
               <span className="text-sm font-semibold text-blue-900">Search users</span>
               <input
@@ -592,7 +592,7 @@ export default function Users({
           </div>
         </form>
 
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-50 p-4">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-slate-50 p-3 sm:mb-4 sm:gap-3 sm:p-4">
           <div>
             <p className="text-sm font-semibold text-slate-900">
               {totalCount === 0 ? 'No users found' : `${displayStart}-${displayEnd} of ${totalCount.toLocaleString()} users`}
@@ -613,46 +613,72 @@ export default function Users({
         </div>
 
         {users.length > 0 ? (
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200 text-left">
-                <thead className="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500">
-                  <tr>
-                    <th className="px-4 py-3">User</th>
-                    <th className="px-4 py-3">Contact</th>
-                    <th className="px-4 py-3">Role</th>
-                    <th className="px-4 py-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {users.map((user) => (
-                    <tr key={user.id} className="bg-white transition hover:bg-blue-50/40">
-                      <td className="px-4 py-4 align-top">
-                        <div className="space-y-1">
-                          <p className="font-semibold text-slate-900">{user.fullName}</p>
-                          <p className="text-xs text-slate-500">{user.matricNumber}</p>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 align-top text-sm text-slate-700">
-                        <div className="space-y-1">
-                          <p>{user.email}</p>
-                          <p className="text-xs text-slate-500">Created {new Date(user.createdAt).toLocaleDateString()}</p>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 align-top">
-                        <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                          {roleLabels[user.role]}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 align-top">
-                        <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${user.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
-                          {user.isActive ? 'Active' : 'Inactive'}
-                        </span>
-                      </td>
+          <div className="space-y-4">
+            <div className="space-y-2 sm:hidden sm:space-y-3">
+              {users.map((user) => (
+                <article key={user.id} className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 space-y-1">
+                      <h3 className="truncate text-sm font-semibold text-slate-900">{user.fullName}</h3>
+                      <p className="text-xs text-slate-500">{user.matricNumber}</p>
+                    </div>
+                    <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${user.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                      {user.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
+
+                  <div className="mt-2 space-y-1.5 text-xs leading-5 text-slate-600">
+                    <p className="break-words">{user.email}</p>
+                    <p className="break-words">Created {new Date(user.createdAt).toLocaleDateString()}</p>
+                    <p>
+                      Role: <span className="font-semibold text-blue-700">{roleLabels[user.role]}</span>
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:block">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-slate-200 text-left">
+                  <thead className="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500">
+                    <tr>
+                      <th className="px-4 py-3">User</th>
+                      <th className="px-4 py-3">Contact</th>
+                      <th className="px-4 py-3">Role</th>
+                      <th className="px-4 py-3">Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {users.map((user) => (
+                      <tr key={user.id} className="bg-white transition hover:bg-blue-50/40">
+                        <td className="px-4 py-4 align-top">
+                          <div className="space-y-1">
+                            <p className="font-semibold text-slate-900">{user.fullName}</p>
+                            <p className="text-xs text-slate-500">{user.matricNumber}</p>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 align-top text-sm text-slate-700">
+                          <div className="space-y-1">
+                            <p>{user.email}</p>
+                            <p className="text-xs text-slate-500">Created {new Date(user.createdAt).toLocaleDateString()}</p>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 align-top">
+                          <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                            {roleLabels[user.role]}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 align-top">
+                          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${user.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                            {user.isActive ? 'Active' : 'Inactive'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         ) : (
@@ -662,7 +688,7 @@ export default function Users({
           </div>
         )}
 
-        <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-3 flex flex-col gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:mt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:p-4">
           <p className="text-xs text-slate-500">
             Page {totalPages > 0 ? pageNumber : 0} of {totalPages} {isFetching ? '• Loading...' : ''}
           </p>

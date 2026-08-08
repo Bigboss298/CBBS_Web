@@ -176,9 +176,9 @@ function FolderCard({ label, count, onClick }: { label: string; count: number; o
 		<button
 			type="button"
 			onClick={onClick}
-			className="group flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-5 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
+			className="group flex h-full flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-4 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
 		>
-			<div className="flex h-28 w-32 items-center justify-center rounded-2xl bg-amber-50 text-8xl transition group-hover:scale-105">
+			<div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-4xl transition group-hover:scale-105 sm:h-20 sm:w-20 sm:text-6xl">
 				📁
 			</div>
 			<div className="space-y-0.5">
@@ -199,10 +199,10 @@ function DocumentList({
 	onDownload: (document: DocumentDto) => void
 }) {
 	return (
-		<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+		<ul className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			{documents.map((document) => (
 				<li key={document.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-					<div className="relative h-40 overflow-hidden bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50 p-3">
+					<div className="relative h-28 overflow-hidden bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50 p-3 sm:h-40">
 						{isImageFile(document.fileName) ? (
 							<img src={document.fileUrl} alt={document.fileName} className="h-full w-full rounded-xl object-cover" loading="lazy" />
 						) : (
@@ -284,31 +284,31 @@ export default function Dashboard({ role, documents }: DashboardPageProps) {
 	if (documents.length === 0) {
 		return (
 			<div className="space-y-6">
-				<section className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-950 via-slate-900 to-blue-900 text-white shadow-2xl">
-					<div className="grid gap-6 p-6 lg:grid-cols-[1.5fr_0.9fr] lg:p-8">
+				<section className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-950 via-slate-900 to-blue-900 text-white shadow-2xl sm:rounded-3xl">
+					<div className="grid gap-4 p-4 sm:gap-6 sm:p-6 lg:grid-cols-[1.5fr_0.9fr] lg:p-8">
 						<div className="space-y-4">
 							<div className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
 								{config.heroLabel}
 							</div>
 							<div>
-								<h1 className="text-3xl font-black tracking-tight sm:text-4xl">{config.heroTitle}</h1>
+								<h1 className="text-2xl font-black tracking-tight sm:text-4xl">{config.heroTitle}</h1>
 								<p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
 									{config.heroDescription}
 								</p>
 							</div>
 						</div>
-						<div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-							<div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-300">Total Documents</p>
-								<p className="mt-2 text-2xl font-bold">0</p>
+						<div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-1 xl:grid-cols-3">
+							<div className="rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur sm:p-4">
+								<p className="truncate text-xs uppercase tracking-[0.18em] text-slate-300">Total Documents</p>
+								<p className="mt-1 text-xl font-bold sm:mt-2 sm:text-2xl">0</p>
 							</div>
-							<div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-300">Visible Folders</p>
-								<p className="mt-2 text-2xl font-bold">0</p>
+							<div className="rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur sm:p-4">
+								<p className="truncate text-xs uppercase tracking-[0.18em] text-slate-300">Visible Folders</p>
+								<p className="mt-1 text-xl font-bold sm:mt-2 sm:text-2xl">0</p>
 							</div>
-							<div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-300">Visible Items</p>
-								<p className="mt-2 text-2xl font-bold">0</p>
+							<div className="rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur sm:p-4">
+								<p className="truncate text-xs uppercase tracking-[0.18em] text-slate-300">Visible Items</p>
+								<p className="mt-1 text-xl font-bold sm:mt-2 sm:text-2xl">0</p>
 							</div>
 						</div>
 					</div>
@@ -327,41 +327,41 @@ export default function Dashboard({ role, documents }: DashboardPageProps) {
 
 		return (
 			<div className="space-y-6">
-				<section className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-950 via-slate-900 to-blue-900 text-white shadow-2xl">
-					<div className="grid gap-6 p-6 lg:grid-cols-[1.5fr_0.9fr] lg:p-8">
+				<section className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-950 via-slate-900 to-blue-900 text-white shadow-2xl sm:rounded-3xl">
+					<div className="grid gap-4 p-4 sm:gap-6 sm:p-6 lg:grid-cols-[1.5fr_0.9fr] lg:p-8">
 						<div className="space-y-4">
 							<div className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
 								{config.heroLabel}
 							</div>
 							<div>
-								<h1 className="text-3xl font-black tracking-tight sm:text-4xl">{config.heroTitle}</h1>
+								<h1 className="text-2xl font-black tracking-tight sm:text-4xl">{config.heroTitle}</h1>
 								<p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">{config.heroDescription}</p>
 							</div>
 						</div>
-						<div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-							<div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-300">Total Documents</p>
-								<p className="mt-2 text-2xl font-bold">{totalDocuments.toLocaleString()}</p>
+						<div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-1 xl:grid-cols-3">
+							<div className="rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur sm:p-4">
+								<p className="truncate text-xs uppercase tracking-[0.18em] text-slate-300">Total Documents</p>
+								<p className="mt-1 text-xl font-bold sm:mt-2 sm:text-2xl">{totalDocuments.toLocaleString()}</p>
 							</div>
-							<div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-300">Current Folders</p>
-								<p className="mt-2 text-2xl font-bold">{folderCount.toLocaleString()}</p>
+							<div className="rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur sm:p-4">
+								<p className="truncate text-xs uppercase tracking-[0.18em] text-slate-300">Current Folders</p>
+								<p className="mt-1 text-xl font-bold sm:mt-2 sm:text-2xl">{folderCount.toLocaleString()}</p>
 							</div>
-							<div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-300">Current Items</p>
-								<p className="mt-2 text-2xl font-bold">{visibleItemCount.toLocaleString()}</p>
+							<div className="rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur sm:p-4">
+								<p className="truncate text-xs uppercase tracking-[0.18em] text-slate-300">Current Items</p>
+								<p className="mt-1 text-xl font-bold sm:mt-2 sm:text-2xl">{visibleItemCount.toLocaleString()}</p>
 							</div>
 						</div>
 					</div>
 				</section>
 
-				<div className="rounded-2xl p-4 shadow-sm">
+				<div className="rounded-2xl p-3 shadow-sm sm:p-4">
 					<div className="flex flex-wrap items-center justify-between gap-3">
 						<div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
 							<button
 								type="button"
 								onClick={() => navigatePath([])}
-								className="px-3 py-1.5 font-semibold text-slate-700 transition hover:bg-slate-100"
+								className="inline-flex min-h-11 items-center rounded-xl px-3 py-1.5 font-semibold text-slate-700 transition hover:bg-slate-100"
 							>
 								Home
 							</button>
@@ -371,7 +371,7 @@ export default function Dashboard({ role, documents }: DashboardPageProps) {
 									<button
 										type="button"
 										onClick={() => navigatePath(segment.path)}
-										className="px-3 py-1.5 font-semibold text-slate-700 transition hover:bg-slate-100"
+										className="inline-flex min-h-11 items-center rounded-xl px-3 py-1.5 font-semibold text-slate-700 transition hover:bg-slate-100"
 									>
 										{segment.label}
 									</button>
@@ -385,7 +385,7 @@ export default function Dashboard({ role, documents }: DashboardPageProps) {
 				<SectionGroup title={config.levels[safePath.length]?.label ?? 'Files'} subtitle={isLeafLevel ? 'File snapshots' : `${levelLabel} folder grid`}>
 					{!isLeafLevel ? (
 						nextFolderLabels.length > 0 ? (
-							<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+							<div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 								{nextFolderLabels.map((label) => (
 									<FolderCard
 										key={label}
@@ -414,9 +414,9 @@ export default function Dashboard({ role, documents }: DashboardPageProps) {
 				</SectionGroup>
 
 				{previewableDocument ? (
-					<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-6 backdrop-blur-sm">
-						<div className="w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl">
-							<div className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4">
+					<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-3 py-4 backdrop-blur-sm sm:px-4 sm:py-6">
+						<div className="w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl">
+							<div className="flex flex-col gap-3 border-b border-slate-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
 								<div>
 									<p className="text-sm font-semibold text-slate-900">{previewableDocument.fileName}</p>
 									<p className="text-xs text-slate-500">{formatType(previewableDocument)}</p>
@@ -424,12 +424,12 @@ export default function Dashboard({ role, documents }: DashboardPageProps) {
 								<button
 									type="button"
 									onClick={() => setPreviewDocument(null)}
-									className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+									className="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-200 px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
 								>
 									Close
 								</button>
 							</div>
-							<div className="max-h-[80vh] overflow-auto bg-slate-50 p-4">
+							<div className="max-h-[80vh] overflow-auto bg-slate-50 p-3 sm:p-4">
 								{isImageFile(previewableDocument.fileName) ? (
 									<img src={previewableDocument.fileUrl} alt={previewableDocument.fileName} className="mx-auto max-h-[75vh] rounded-2xl object-contain" />
 								) : (

@@ -145,14 +145,14 @@ export default function ActivityLog({
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-white via-blue-50 to-cyan-50 shadow-sm">
-        <div className="grid gap-6 px-6 py-6 lg:grid-cols-[1.4fr_0.9fr] lg:px-8 lg:py-8">
+      <section className="overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-white via-blue-50 to-cyan-50 shadow-sm sm:rounded-3xl">
+        <div className="grid gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6 lg:grid-cols-[1.4fr_0.9fr] lg:px-8 lg:py-8">
           <div className="space-y-4">
             <div className="inline-flex items-center rounded-full border border-blue-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-blue-600">
               Activity Log
             </div>
             <div className="space-y-2">
-              <h1 className="text-3xl font-black tracking-tight text-blue-950 sm:text-4xl">Accountability trail</h1>
+              <h1 className="text-2xl font-black tracking-tight text-blue-950 sm:text-4xl">Accountability trail</h1>
               <p className="max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
                 Review your own activity history. Admins can switch to the system-wide feed and inspect everyone’s logged actions.
               </p>
@@ -181,17 +181,17 @@ export default function ActivityLog({
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-            <div className="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-sm backdrop-blur">
+            <div className="rounded-2xl border border-white/80 bg-white/80 p-3 shadow-sm backdrop-blur sm:p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Loaded logs</p>
-              <p className="mt-2 text-3xl font-black text-blue-900">{totalLoadedLogs}</p>
+              <p className="mt-2 text-2xl font-black text-blue-900 sm:text-3xl">{totalLoadedLogs}</p>
             </div>
-            <div className="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-sm backdrop-blur">
+            <div className="rounded-2xl border border-white/80 bg-white/80 p-3 shadow-sm backdrop-blur sm:p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Page</p>
               <p className="mt-2 text-lg font-bold text-slate-900">
                 {totalLoadedLogs === 0 ? '—' : `${currentPage} of ${totalPages}`}
               </p>
             </div>
-            <div className="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-sm backdrop-blur">
+            <div className="rounded-2xl border border-white/80 bg-white/80 p-3 shadow-sm backdrop-blur sm:p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Latest</p>
               <p className="mt-2 text-sm font-semibold text-slate-900">{latestActivity ? formatTimestamp(latestActivity.createdAt) : 'No activity yet'}</p>
             </div>
@@ -240,9 +240,28 @@ export default function ActivityLog({
             subtitle={scope === 'all' && isAdmin ? 'There are no system entries to show yet.' : 'Your activity will appear here after you use the app.'}
           />
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-100">
+          <>
+            <div className="space-y-2 sm:hidden sm:space-y-3">
+              {displayedLogs.map((log) => (
+                <article key={log.id} className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 space-y-1">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{formatTimestamp(log.createdAt)}</p>
+                      {isAdmin && scope === 'all' ? <p className="truncate text-sm font-semibold text-slate-900">{log.userFullName}</p> : null}
+                      {isAdmin && scope === 'all' ? <p className="text-xs text-slate-500">{log.userMatricNumber}</p> : null}
+                    </div>
+                    <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${getActionTone(log.action)}`}>
+                      {log.action}
+                    </span>
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">{log.description ?? 'No additional description.'}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:block">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-slate-100">
                 <thead className="bg-slate-50">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Time</th>
@@ -259,14 +278,15 @@ export default function ActivityLog({
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {displayedLogs.length > 0 && (
           <div className="mt-6 space-y-4">
             {/* Pagination Info */}
-            <div className="flex items-center justify-between rounded-xl bg-blue-50 px-4 py-3">
+            <div className="flex flex-col gap-1 rounded-xl bg-blue-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-slate-600">
                 Showing <span className="font-semibold">{totalLoadedLogs === 0 ? 0 : startIdx + 1}</span>–
                 <span className="font-semibold">{Math.min(endIdx, totalLoadedLogs)}</span> of{' '}
@@ -279,7 +299,7 @@ export default function ActivityLog({
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
               <button
                 type="button"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}

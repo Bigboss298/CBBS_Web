@@ -1,1 +1,47 @@
 @import "tailwindcss";
+
+@layer base {
+	*,
+	::before,
+	::after {
+		box-sizing: border-box;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		min-height: 100vh;
+		overflow-x: hidden;
+		background: #f8fafc;
+		color: #0f172a;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	#root {
+		min-height: 100vh;
+	}
+
+	button,
+	[role='button'] {
+		min-height: 2.75rem;
+	}
+
+	input,
+	select,
+	textarea {
+		font-size: 16px;
+	}
+
+	img,
+	video {
+		max-width: 100%;
+		height: auto;
+	}
+
+	table {
+		width: 100%;
+	}
+}

@@ -39,7 +39,7 @@ export default function Faculties({
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
-              className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
+              className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-base outline-none focus:border-blue-500 sm:text-sm"
               placeholder="e.g. Faculty of Science"
               required
             />
@@ -47,7 +47,7 @@ export default function Faculties({
           <button
             type="submit"
             disabled={isCreating}
-            className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
             {isCreating ? 'Creating...' : 'Create Faculty'}
           </button>
@@ -59,7 +59,7 @@ export default function Faculties({
           type="button"
           onClick={onRefresh}
           disabled={isFetching}
-          className="mb-4 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+          className="mb-4 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300 sm:w-auto"
         >
           {isFetching ? 'Refreshing...' : 'Refresh Faculties'}
         </button>

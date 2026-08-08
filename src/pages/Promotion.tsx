@@ -75,7 +75,7 @@ export default function Promotion({
             You do not have permission to run student promotions.
           </p>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl bg-blue-50 p-4">
+          <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl bg-blue-50 p-4 sm:p-5">
             <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
               <p className="text-sm font-semibold text-amber-800">⚠ This action cannot be undone</p>
               <ul className="mt-2 space-y-1 text-xs text-amber-700">
@@ -116,7 +116,7 @@ export default function Promotion({
                     onClear()
                   }}
                   disabled={isFetching || isPromoting}
-                  className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-xl border border-blue-200 bg-white px-3 py-2 text-base outline-none focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
                   required
                 >
                   {isFetching ? (
@@ -155,7 +155,7 @@ export default function Promotion({
               <button
                 type="submit"
                 disabled={isPromoting || !departmentId || !confirmed}
-                className="rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
               >
                 {isPromoting ? 'Promoting...' : 'Run Promotion'}
               </button>
@@ -163,7 +163,7 @@ export default function Promotion({
                 type="button"
                 onClick={handleReset}
                 disabled={isPromoting}
-                className="rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed"
               >
                 Reset
               </button>
@@ -174,15 +174,15 @@ export default function Promotion({
 
       {lastResult ? (
         <SectionGroup title="Promotion Result" subtitle="Summary of the last promotion run">
-          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 space-y-4">
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 space-y-3 sm:p-5 sm:space-y-4">
             <p className="text-sm font-semibold text-emerald-800">{lastResult.message}</p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-xl border border-emerald-100 bg-white p-4 text-center shadow-sm">
-                <p className="text-3xl font-black text-blue-700">{lastResult.promotedCount}</p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-3">
+              <div className="rounded-xl border border-emerald-100 bg-white p-3 text-center shadow-sm sm:p-4">
+                <p className="text-2xl font-black text-blue-700 sm:text-3xl">{lastResult.promotedCount}</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-slate-500">Students Promoted</p>
               </div>
-              <div className="rounded-xl border border-emerald-100 bg-white p-4 text-center shadow-sm">
-                <p className="text-3xl font-black text-emerald-700">{lastResult.graduatedCount}</p>
+              <div className="rounded-xl border border-emerald-100 bg-white p-3 text-center shadow-sm sm:p-4">
+                <p className="text-2xl font-black text-emerald-700 sm:text-3xl">{lastResult.graduatedCount}</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-slate-500">Students Graduated</p>
               </div>
             </div>

@@ -1,4 +1,6 @@
 import { useId, useState } from 'react'
+import { Link } from 'react-router-dom'
+import AuthLeftPane from '../components/AuthLeftPane'
 
 type LoginPageProps = {
 	isLoading: boolean
@@ -123,80 +125,18 @@ export default function Login({ isLoading, errorMessage, onLogin }: LoginPagePro
 	}
 
 	return (
-		<div className="min-h-screen bg-slate-100 text-white">
-			<div className="grid min-h-screen w-full items-center gap-6 px-2 py-2 sm:px-3 sm:py-3 lg:grid-cols-[0.84fr_1.16fr] lg:px-3 lg:py-3">
-				<section className="relative hidden h-full w-full max-w-[760px] justify-self-start overflow-hidden rounded-2xl border border-slate-200/60 bg-slate-950 shadow-2xl md:block">
-					<div
-						className="absolute inset-0 bg-cover bg-center"
-						style={{
-							backgroundImage:
-								'linear-gradient(180deg, rgba(2,6,23,0.12) 0%, rgba(2,6,23,0.45) 52%, rgba(2,6,23,0.9) 100%), url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1400&q=80")',
-						}}
-					/>
-					<div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(15,118,110,0.08),transparent_45%,rgba(59,130,246,0.12))]" />
-					<div className="relative flex h-full min-h-[760px] flex-col justify-between p-8 text-white">
-						<div className="flex items-center justify-between gap-4">
-							<div className="inline-flex items-center rounded-full border border-white/20 bg-black/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm">
-								CBBS Portal
-							</div>
-							<div className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-medium text-white/80 backdrop-blur-sm">
-								Secure academic access
-							</div>
-						</div>
-
-						<div className="max-w-xl space-y-4">
-							<p className="text-sm font-medium uppercase tracking-[0.24em] text-emerald-200/90">CBBS Login</p>
-							<h1 className="max-w-lg text-5xl font-black leading-[0.95] tracking-tight text-balance xl:text-6xl">
-								Academic records, handled in one place.
-							</h1>
-							<p className="max-w-md text-sm leading-7 text-white/78 xl:text-base">
-								Sign in to continue to your role-based workspace for student documents, and administrative records.
-							</p>
-						</div>
-
-						<div className="grid gap-3 sm:max-w-xl sm:grid-cols-3">
-							<div className="rounded-2xl border border-white/12 bg-black/20 p-4 backdrop-blur-sm">
-								<p className="text-xs uppercase tracking-[0.18em] text-white/55">Students</p>
-								<p className="mt-2 text-sm font-semibold text-white">View and manage your document set.</p>
-							</div>
-							<div className="rounded-2xl border border-white/12 bg-black/20 p-4 backdrop-blur-sm">
-								<p className="text-xs uppercase tracking-[0.18em] text-white/55">Level Advisers</p>
-								<p className="mt-2 text-sm font-semibold text-white">Review submissions by level.</p>
-							</div>
-                            <div className="rounded-2xl border border-white/12 bg-black/20 p-4 backdrop-blur-sm">
-								<p className="text-xs uppercase tracking-[0.18em] text-white/55">HOD</p>
-								<p className="mt-2 text-sm font-semibold text-white">Track documents by Department.</p>
-							</div>
-                              <div className="rounded-2xl border border-white/12 bg-black/20 p-4 backdrop-blur-sm">
-								<p className="text-xs uppercase tracking-[0.18em] text-white/55">DEAN/FO</p>
-								<p className="mt-2 text-sm font-semibold text-white">Track documents by Faculty.</p>
-							</div>
-							<div className="rounded-2xl border border-white/12 bg-black/20 p-4 backdrop-blur-sm">
-								<p className="text-xs uppercase tracking-[0.18em] text-white/55">Admins</p>
-								<p className="mt-2 text-sm font-semibold text-white">Track the full academic hierarchy.</p>
-							</div>
-						</div>
-
-						<div className="flex items-end justify-between gap-4 border-t border-white/12 pt-5">
-							<div>
-								<p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/55">Access flow</p>
-								<p className="mt-2 max-w-md text-sm leading-6 text-white/70">Fast sign-in, role-aware routing, and document browsing that matches the rest of the application.</p>
-							</div>
-							<div className="rounded-2xl border border-white/12 bg-white/10 px-4 py-3 text-sm font-semibold text-white/90 backdrop-blur-sm">
-								CBBS v1
-							</div>
-						</div>
-					</div>
-				</section>
+		<div className="min-h-screen bg-slate-100 text-slate-900">
+			<div className="grid min-h-screen w-full items-center gap-4 px-4 py-4 sm:px-6 sm:py-6 lg:grid-cols-[0.84fr_1.16fr] lg:px-6 lg:py-6">
+				<AuthLeftPane />
 
 				<section className="w-full">
-					<div className="mx-auto w-full max-w-lg rounded-2xl border border-slate-200/80 bg-white/95 p-6 text-slate-900 shadow-[0_24px_80px_rgba(15,23,42,0.24)] backdrop-blur-xl sm:p-8">
+					<div className="mx-auto w-full max-w-lg rounded-2xl border border-slate-200/80 bg-white/95 p-5 text-slate-900 shadow-[0_24px_80px_rgba(15,23,42,0.24)] backdrop-blur-xl sm:p-8">
 						<div className="mb-8 space-y-4">
 							<div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-700">
 								Welcome back
 							</div>
 							<div>
-								<h2 className="text-3xl font-black tracking-tight text-slate-950">Sign in to CBBS</h2>
+								<h2 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Sign in to CBBS</h2>
 								<p className="mt-2 text-sm leading-6 text-slate-500">Use your email address or matric number to continue.</p>
 							</div>
 						</div>
@@ -215,7 +155,7 @@ export default function Login({ isLoading, errorMessage, onLogin }: LoginPagePro
 							/>
 
 							<div className="space-y-1.5">
-								<div className="flex items-center justify-between gap-3">
+								<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 									<label htmlFor={passwordId} className="text-sm font-semibold text-slate-800">
 										Password
 									</label>
@@ -259,7 +199,7 @@ export default function Login({ isLoading, errorMessage, onLogin }: LoginPagePro
 								{passwordError ? <p className="px-1 text-xs font-medium text-red-600">{passwordError}</p> : <p className="px-1 text-xs text-slate-500">Use a private password on a trusted device.</p>}
 							</div>
 
-							<div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+							<div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
 								<label className="inline-flex items-center gap-3 text-sm font-medium text-slate-700">
 									<input
 										type="checkbox"
@@ -276,7 +216,7 @@ export default function Login({ isLoading, errorMessage, onLogin }: LoginPagePro
 								type="submit"
 								disabled={isLoading}
 								aria-busy={isLoading}
-								className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-cyan-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:from-blue-600 hover:via-blue-500 hover:to-cyan-500 focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-70"
+								className="inline-flex min-h-11 w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-cyan-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:from-blue-600 hover:via-blue-500 hover:to-cyan-500 focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-70"
 							>
 								{isLoading ? (
 									<>
@@ -293,6 +233,13 @@ export default function Login({ isLoading, errorMessage, onLogin }: LoginPagePro
 									{errorMessage}
 								</div>
 							) : null}
+
+							<p className="text-center text-sm text-slate-500">
+								Don&apos;t have an account?{' '}
+								<Link to="/register" className="font-semibold text-blue-700 transition hover:text-blue-800">
+									Register here
+								</Link>
+							</p>
 						</form>
 					</div>
 				</section>
